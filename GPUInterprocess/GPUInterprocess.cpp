@@ -5,9 +5,11 @@
 #include <string>
 #include <iostream>
 #include <format>
+#include <type_traits>
 #include <stdlib.h>     //for using the function sleep
 #include "SharedMemory.h"
 #include "MultithreadData.h"
+#include "openCLFunctions.h"
 
 static bool g_Run = true;
 
@@ -27,16 +29,20 @@ void writeInterprocessData()
     while (g_Run)
     {
         generated = std::format("{0} {1}", base, index);
+        std::cout << "Write: " << generated << std::endl;
         sharedDataWrite->process([&generated](std::string& data) {data = generated; });
         Sleep(5000);
         ++index;
     }
 }
 
+
 int main()
 {
+    displayOpenCLInfo();
+
     writeInterprocessData();
-    std::cout << "Hello World!\n";
+    return 0;
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage

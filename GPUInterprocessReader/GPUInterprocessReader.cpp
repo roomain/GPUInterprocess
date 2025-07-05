@@ -19,13 +19,20 @@ void read(const std::string& a_data)
 }
 void readInterprocessData()
 {
-    SharedMemory<SharedString> sharedMemRead(L"SharedTest", OpenMode::Read_Only);
-    const SharedString* sharedDataRead = sharedMemRead.getObject("sharedData");
-
-    while (g_Run)
+    try
     {
-        sharedDataRead->process(read);
-        Sleep(500);
+        SharedMemory<SharedString> sharedMemRead(L"SharedTest", OpenMode::Read_Only);
+        const SharedString* sharedDataRead = sharedMemRead.getObject("sharedData");
+
+        while (g_Run)
+        {
+            sharedDataRead->process(read);
+            Sleep(500);
+        }
+    }
+    catch (boost::interprocess::interprocess_exception& except)
+    {
+        std::cerr << "Error: " << except.what();
     }
 }
 
