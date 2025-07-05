@@ -41,7 +41,7 @@ int main()
 {
     displayOpenCLInfo();
 
-    writeInterprocessData();
+    //writeInterprocessData();
     return 0;
 }
 

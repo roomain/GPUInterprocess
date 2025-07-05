@@ -5,7 +5,8 @@ void displayDeviceType(cl_device_id device)
 {
     cl_device_type type;
     clGetDeviceInfo(device, CL_DEVICE_TYPE, sizeof(cl_device_type), &type, nullptr);
-    std::cout << "Device type ";// << data.data() << std::endl;
+    levelSpace(LevelDeviceSpec);
+    std::cout << "Device type ";
     switch (type)
     {
     case CL_DEVICE_TYPE_CPU:
@@ -36,6 +37,7 @@ void displayMemorySize(cl_device_id device, const cl_device_info info, const std
     constexpr size_t mega = 1024 * kilo;
     constexpr size_t giga = 1024 * mega;
 
+    levelSpace(LevelDeviceSpec);
     if (allocSize > giga)
     {
         std::cout << title << " " << static_cast<double>(allocSize) / static_cast<double>(giga) << " Gb" << std::endl;
@@ -68,7 +70,7 @@ void displayDeviceInfo(cl_device_id device)
 
 void displayPlaformInfo(cl_platform_id platform)
 {
-    static const char* attributeNames[5] = { "Name", "Vendor", "Version", "Profile", "Extensions" };
+    static const char* attributeNames[5] = { "Platform Name", "Platform Vendor", "Platform Version", "Platform Profile", "Platform Extensions" };
     static const cl_platform_info attributeTypes[5] = {
         CL_PLATFORM_NAME,
         CL_PLATFORM_VENDOR,
@@ -93,6 +95,7 @@ void displayPlaformInfo(cl_platform_id platform)
 
         // get platform attribute value
         clGetPlatformInfo(platform, attrib, infoSize, data.data(), nullptr);
+        levelSpace(PlatformSpec);
         std::cout << attributeNames[attibuteIndex++] << " " << data.data() << std::endl;
     }
 
@@ -115,7 +118,9 @@ void displayPlaformInfo(cl_platform_id platform)
             for(auto device : devices)
                 displayDeviceInfo(device);
         }
+        std::cout << "\n";
     }
+    std::cout << "---------------------------------------------------------------------\n";
 }
 
 void displayOpenCLInfo()
@@ -123,5 +128,7 @@ void displayOpenCLInfo()
     std::vector<cl_platform_id> platformList;
     enumerate(clGetPlatformIDs, platformList);
     for (cl_platform_id platform : platformList)
+    {
         displayPlaformInfo(platform);
+    }
 }
